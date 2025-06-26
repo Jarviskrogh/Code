@@ -4,10 +4,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import datetime as dt
 
-glacier_file = "/home/brjarvis/Documents/LASERGlacier/ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc"
+glacier_file = "C:\\Users\\betha\Desktop\LaserGlacier\ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc"
+#glacier_file = "/home/brjarvis/Documents/LASERGlacier/ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc"
 xrds = xr.open_dataset(glacier_file)
 
-#print(xrds)
+print(xrds)
 #for attr, value in xrds.attrs.items():
 #    print(f"{attr}: {value} \n")
 #print(xrds.data_vars)
@@ -25,7 +26,7 @@ xrds = xr.open_dataset(glacier_file)
 #xrds['v_error'].plot()
 #xrds['vx_error'].plot()
 #xrds['vy_error'].plot()
-plt.show()
+#plt.show()
 
 
 
