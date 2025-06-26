@@ -8,7 +8,7 @@ glacier_file = "C:\\Users\\betha\Desktop\LaserGlacier\ITS_LIVE_velocity_120m_RGI
 #glacier_file = "/home/brjarvis/Documents/LASERGlacier/ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc"
 xrds = xr.open_dataset(glacier_file)
 
-print(xrds)
+#print(xrds)
 #for attr, value in xrds.attrs.items():
 #    print(f"{attr}: {value} \n")
 #print(xrds.data_vars)
@@ -27,6 +27,9 @@ print(xrds)
 #xrds['vx_error'].plot()
 #xrds['vy_error'].plot()
 #plt.show()
+
+velocity = xrds['v'].to_dataframe()
+velocity.to_csv('C:\\Users\\betha\Desktop\LaserGlacier\\velocityData.csv')
 
 
 
