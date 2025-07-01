@@ -3,9 +3,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime as dt
+import itslive
 
-glacier_file = 'C:\\Users\\betha\\Desktop\LaserGlacier\ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc'
-#glacier_file = "/home/brjarvis/Documents/LASERGlacier/ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc"
+#glacier_file_ = 'C:\\Users\\betha\\Desktop\LaserGlacier\ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc'
+glacier_file = "/home/brjarvis/Documents/LASERGlacier/ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc"
 xrds = xr.open_dataset(glacier_file)
 
 #print(xrds)
@@ -36,7 +37,8 @@ df = xrds.to_dataframe()
 
 xSlice = xrds.sel(x = 900532.5)
 xSliceFrame = xSlice.to_dataframe()
-xSliceFrame.to_csv('C:\\Users\\betha\\Desktop\\LaserGlacier\\xSlice')
+print(xSliceFrame)
+#xSliceFrame.to_csv('C:\\Users\\betha\\Desktop\\LaserGlacier\\xSlice')
 
 
 
