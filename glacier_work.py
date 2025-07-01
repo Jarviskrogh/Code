@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import datetime as dt
 
-glacier_file = "C:\\Users\\betha\Desktop\LaserGlacier\ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc"
+glacier_file = 'C:\\Users\\betha\\Desktop\LaserGlacier\ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc'
 #glacier_file = "/home/brjarvis/Documents/LASERGlacier/ITS_LIVE_velocity_120m_RGI07A_2012_v02.nc"
 xrds = xr.open_dataset(glacier_file)
 
@@ -15,6 +15,7 @@ xrds = xr.open_dataset(glacier_file)
 #print(xrds.data_vars['v_error'])
 #print(xrds.data_vars['v_error'].attrs)
 #print(xrds.data_vars['v_error'].values)
+#print(xrds.data_vars['landice'])
 
 #xrds['mapping'].plot()
 #xrds['count'].plot()
@@ -29,7 +30,15 @@ xrds = xr.open_dataset(glacier_file)
 #plt.show()
 
 velocity = xrds['v'].to_dataframe()
-velocity.to_csv('C:\\Users\\betha\Desktop\LaserGlacier\\velocityData.csv')
+df = xrds.to_dataframe()
+#df.to_csv('C:\\Users\\betha\\Desktop\\LaserGlacier\\allData')
+#print(df)
+
+xSlice = xrds.sel(x = 900532.5)
+xSliceFrame = xSlice.to_dataframe()
+xSliceFrame.to_csv('C:\\Users\\betha\\Desktop\\LaserGlacier\\xSlice')
+
+
 
 
 
