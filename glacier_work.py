@@ -23,7 +23,13 @@ class graphing(convertToNetCDF):
 point = [(19.4, 78.8)]
 name = 'glacierVel.nc'
 graph = graphing(point, name)
-graph.plotV()
+# graph.xrds['v'].plot()
+# plt.show()
+#print(graph.xrds)
+#print(graph.xrds.data_vars) #Data vars: date_dt, v, vx_error, vy, vy_error, v_error, vx, mission_img1, satellite_img1,
+#   lon, lat, x_proj, y_proj
+df = graph.xrds.to_dataframe()
+#df.to_csv('C:\\Users\\betha\\Desktop\LaserGlacier\Code\data.csv')
             
 
 
