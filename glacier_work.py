@@ -24,7 +24,7 @@ class graphing(convertToNetCDF):
         plt.figure(figsize=(20, 8))
 
         vData.plot.scatter(label=f'Original data ({variable})', color='blue')
-    
+
         plt.xlabel('Time')
         if variable == 'v':
             plt.title('Velocity over Time')
@@ -135,12 +135,12 @@ class graphing(convertToNetCDF):
 
 
 
-point = [(18.9377, 78.5853)]
-name = 'glacierDATA.nc'
-graph = graphing(point, name)
-graph.plotNoYear('v')
-#print(graph.xrds['v'].attrs['description'])
+points = [(18.5916, 78.6027), (18.7564, 78.5919)]
+name = 'glacierDATAs.nc'
+graph = graphing(points, name)
+#graph.plotNoYear('v')
+#print(graph.xrds)
 #print(graph.xrds.data_vars) #Data vars: date_dt, v, vx_error, vy, vy_error, v_error, vx, mission_img1, satellite_img1,
 #   lon, lat, x_proj, y_proj
-#df = graph.xrds.to_dataframe()
-#df.to_csv('C:\\Users\\betha\\Desktop\LaserGlacier\Code\data.csv')
+df = graph.xrds.to_dataframe()
+df.to_csv('C:\\Users\\betha\\Desktop\LaserGlacier\Code\data.csv')
