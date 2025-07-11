@@ -16,14 +16,20 @@ class graphing(convertToNetCDF):
             convertTime.convertFile()
             self.xrds = xr.open_dataset(self.nameForFile, decode_timedelta=True)
     
-    def plotNoYear(self, variable='v'):
+    def plotAllPtsNoYear(self, variable='v'):
+        plt.figure(figsize=(20, 8))
 
         vData = self.xrds[variable].dropna('mid_date')
         
+        point1 = vData.sel(point=0)
+        point2 = vData.sel(point=1)
+        point3 = vData.sel(point=2)
+        point4 = vData.sel(point=3)
 
-        plt.figure(figsize=(20, 8))
-
-        vData.plot.scatter(label=f'Original data ({variable})', color='blue')
+        point1.plot.scatter(label=f'Original point 1 Data ({variable})', color='blue')
+        point2.plot.scatter(label=f'Original point 2 Data ({variable})', color='orange')
+        point3.plot.scatter(label=f'Original point 3 Data ({variable})', color='black')
+        point4.plot.scatter(label=f'Original point 4 Data ({variable})', color='pink')
 
         plt.xlabel('Time')
         if variable == 'v':
@@ -35,6 +41,28 @@ class graphing(convertToNetCDF):
         plt.grid(True, which='both', linestyle='--', alpha=0.5)
         plt.legend()                       
         plt.show()
+
+    def plotSinglePtNoYear(self, variable='v', pt=0):
+        plt.figure(figsize=(20, 8))
+
+        vData = self.xrds[variable].dropna('mid_date')
+        
+        point = vData.sel(point=pt)
+
+        point.plot.scatter(label=f'Original point {pt} Data ({variable})', color='blue')
+
+        
+        plt.xlabel('Time')
+        if variable == 'v':
+            plt.title('Velocity over Time')
+            plt.ylabel('Velocity (m/yr)')
+        else:
+            plt.title(f'{variable} over Time')
+            plt.ylabel(f'{variable} (m/yr)')
+        plt.grid(True, which='both', linestyle='--', alpha=0.5)
+        plt.legend()                       
+        plt.show()
+
 
 
     def plotWithYear(self, variable='v', year=2020):
@@ -135,12 +163,12 @@ class graphing(convertToNetCDF):
 
 
 
-points = [(18.5916, 78.6027), (18.7564, 78.5919)]
+points = [(18.5916, 78.6027), (18.7564, 78.5919), (18.9212, 78.5766), (19.0379, 78.5532)]
 name = 'glacierDATAs.nc'
 graph = graphing(points, name)
-#graph.plotNoYear('v')
-#print(graph.xrds)
+graph.plotSinglePtNoYear('v', 2)
+#print(graph.xrds.dims)
 #print(graph.xrds.data_vars) #Data vars: date_dt, v, vx_error, vy, vy_error, v_error, vx, mission_img1, satellite_img1,
 #   lon, lat, x_proj, y_proj
-df = graph.xrds.to_dataframe()
-df.to_csv('C:\\Users\\betha\\Desktop\LaserGlacier\Code\data.csv')
+# df = graph.xrds.to_dataframe()
+# df.to_csv('C:\\Users\\betha\\Desktop\LaserGlacier\Code\data.csv')
