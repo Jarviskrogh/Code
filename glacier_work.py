@@ -49,7 +49,7 @@ class graphing(convertToNetCDF):
         
         point = vData.sel(point=pt)
 
-        point.plot.scatter(label=f'Original point {pt} Data ({variable})', color='blue')
+        point.plot.scatter(label=f'Original point {pt+1} Data ({variable})', color='blue')
 
         
         plt.xlabel('Time')
@@ -65,15 +65,21 @@ class graphing(convertToNetCDF):
 
 
 
-    def plotWithYear(self, variable='v', year=2020):
-
-        vData = self.xrds[variable].dropna('mid_date')
-        vDataYear = vData.sel(mid_date=str(year))
-        
+    def plotAllPtsWithYear(self, variable='v', year=2020):
 
         plt.figure(figsize=(20, 8))
 
-        vDataYear.plot.scatter(label=f'Original data ({variable})', color='blue')
+        vData = self.xrds[variable].dropna('mid_date')
+        
+        point1 = vData.sel(point=0, mid_date=str(year))
+        point2 = vData.sel(point=1, mid_date=str(year))
+        point3 = vData.sel(point=2, mid_date=str(year))
+        point4 = vData.sel(point=3, mid_date=str(year))
+
+        point1.plot.scatter(label=f'Original point 1 Data ({variable})', color='blue')
+        point2.plot.scatter(label=f'Original point 2 Data ({variable})', color='orange')
+        point3.plot.scatter(label=f'Original point 3 Data ({variable})', color='black')
+        point4.plot.scatter(label=f'Original point 4 Data ({variable})', color='pink')
     
         plt.xlabel('Time')
         if variable == 'v':
@@ -86,15 +92,40 @@ class graphing(convertToNetCDF):
         plt.legend()                       
         plt.show()
 
-    def plotNoYearRM(self, variable='v', window_size=30):
+
+    def plotSinglePtWithYear(self, variable='v', pt=0, year=2020):
+        plt.figure(figsize=(20, 8))
 
         vData = self.xrds[variable].dropna('mid_date')
-        
+        point = vData.sel(point=pt, mid_date=str(year))
+
+        point.plot.scatter(label=f'Original point {pt+1} Data ({variable})', color='blue')
+
+        plt.xlabel('Time')
+        if variable == 'v':
+            plt.title(f'Velocity over Time during {year}')
+            plt.ylabel('Velocity (m/yr)')
+        else:
+            plt.title(f'{variable} over Time during {year}')
+            plt.ylabel(f'{variable} (m/yr)')
+        plt.grid(True, which='both', linestyle='--', alpha=0.5)
+        plt.legend()
+        plt.show()
+
+
+    def plotSinglePtNoYearRM(self, variable='v', pt=0, window_size=20):
+
+        vData = self.xrds[variable].dropna('mid_date')
+
+        point = vData.sel(point=pt)
+
         runningMean = self.calculate_running_mean(variable, window_size)
+        runningMean = runningMean.sel(point=pt)
+        runningMean = runningMean.where(runningMean.notnull(), drop=True)
 
         plt.figure(figsize=(20, 8))
 
-        vData.plot.scatter(label=f'Original data ({variable})', color='blue')
+        point.plot.scatter(label=f'Original point {pt+1} Data ({variable})', color='blue')
 
         runningMean.plot.line(
             color='red', 
@@ -114,17 +145,19 @@ class graphing(convertToNetCDF):
         plt.legend()                       
         plt.show()
 
-    def plotWithYearRM(self, variable='v', year=2020, window_size=20):
 
-        vData = self.xrds[variable].dropna('mid_date')
-        vDataYear = vData.sel(mid_date=str(year))
-        
-        runningMean = self.calculate_running_mean(variable, window_size)
-        runningMeanYear = runningMean.sel(mid_date=str(year))
+    def plotSinglePtWithYearRM(self, variable='v', pt=0, year=2020, window_size=10):
 
         plt.figure(figsize=(20, 8))
 
-        vDataYear.plot.scatter(label=f'Original data ({variable})', color='blue')
+        vDataYear = self.xrds[variable].dropna('mid_date')
+        pointYear = vDataYear.sel(point=pt, mid_date=str(year))
+
+        runningMeanYear = self.calculate_running_mean(variable, window_size)
+        runningMeanYear = runningMeanYear.sel(point=pt, mid_date=str(year))
+        runningMeanYear = runningMeanYear.where(runningMeanYear.notnull(), drop=True)
+
+        pointYear.plot.scatter(label=f'Original point {pt+1} Data ({variable})', color='blue')
 
         runningMeanYear.plot.line(
             color='red', 
@@ -144,6 +177,42 @@ class graphing(convertToNetCDF):
         plt.legend()                       
         plt.show()
     
+    def plotAllPtsNoYearRM(self, variable='v', window_size=30):
+        plt.figure(figsize=(20, 8))
+
+        vData = self.xrds[variable].dropna('mid_date')
+        
+        point1 = vData.sel(point=0)
+        point2 = vData.sel(point=1)
+        point3 = vData.sel(point=2)
+        point4 = vData.sel(point=3)
+
+        runningMean = self.calculate_running_mean(variable, window_size)
+        runningMean = runningMean.where(runningMean.notnull(), drop=True)
+
+        point1.plot.scatter(label=f'Original point 1 Data ({variable})', color='blue')
+        point2.plot.scatter(label=f'Original point 2 Data ({variable})', color='orange')
+        point3.plot.scatter(label=f'Original point 3 Data ({variable})', color='black')
+        point4.plot.scatter(label=f'Original point 4 Data ({variable})', color='pink')
+
+
+        runningMean.plot.line(
+            color='red', 
+            linewidth=2, 
+            label=f'Running mean (window={window_size})'
+        )
+
+        plt.xlabel('Time')
+        if variable == 'v':
+            plt.title('Velocity over Time')
+            plt.ylabel('Velocity (m/yr)')
+        else:
+            plt.title(f'{variable} over Time')
+            plt.ylabel(f'{variable} (m/yr)')
+        plt.grid(True, which='both', linestyle='--', alpha=0.5)
+        plt.legend()                       
+        plt.show()
+
     def calculate_running_mean(self, variable='v', window_size=12):
         """
         Calculate a running mean (moving average) for the specified variable.
@@ -164,11 +233,11 @@ class graphing(convertToNetCDF):
 
 
 points = [(18.5916, 78.6027), (18.7564, 78.5919), (18.9212, 78.5766), (19.0379, 78.5532)]
-name = 'glacierDATAs.nc'
+name = 'negribeenData.nc'
 graph = graphing(points, name)
-graph.plotSinglePtNoYear('v', 2)
+graph.plotAllPtsNoYearRM(variable='v', window_size=30)
 #print(graph.xrds.dims)
 #print(graph.xrds.data_vars) #Data vars: date_dt, v, vx_error, vy, vy_error, v_error, vx, mission_img1, satellite_img1,
 #   lon, lat, x_proj, y_proj
 # df = graph.xrds.to_dataframe()
-# df.to_csv('C:\\Users\\betha\\Desktop\LaserGlacier\Code\data.csv')
+# df.to_csv('negribeenData.csv')
