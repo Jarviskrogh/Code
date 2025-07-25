@@ -21,6 +21,9 @@ class graphing(convertToNetCDF):
 
         vData = self.xrds[variable].dropna('mid_date')
 
+        #Use if needed
+        vData = vData.sel(mid_date=vData['mid_date'] >= np.datetime64('2010-01-01'))
+        #vData = vData.sel(mid_date=vData['mid_date'] <= np.datetime64('2020-01-01'))
 
         point1 = vData.sel(point=0)
         point2 = vData.sel(point=1)
@@ -239,10 +242,14 @@ class graphing(convertToNetCDF):
         plt.legend()                       
         plt.show()
     
-    def plotAllPtsNoYearRM(self, variable='v', window_size=4):
+    def plotAllPtsNoYearRM(self, variable='v', window_size=10):
         plt.figure(figsize=(20, 8))
 
         vData = self.xrds[variable].dropna('mid_date')
+
+        #Use if needed
+        vData = vData.sel(mid_date=vData['mid_date'] >= np.datetime64('2010-01-01'))
+        #vData = vData.sel(mid_date=vData['mid_date'] <= np.datetime64('2020-01-01'))
         
         point1 = vData.sel(point=0)
         point2 = vData.sel(point=1)
@@ -250,6 +257,11 @@ class graphing(convertToNetCDF):
         point4 = vData.sel(point=3)
 
         runningMean = self.calculate_running_mean(variable, window_size)
+
+        #Use if previous bounds were set
+        runningMean = runningMean.sel(mid_date=runningMean['mid_date'] >= np.datetime64('2010-01-01'))
+        #runningMean = runningMean.sel(mid_date=runningMean['mid_date'] <= np.datetime64('2020-01-01'))
+
         runningMeanOrigin = runningMean.sel(point=0)
         runningMeanOrigin = runningMeanOrigin.where(runningMeanOrigin.notnull(), drop=True)
 
@@ -303,11 +315,13 @@ class graphing(convertToNetCDF):
 
 
 
-
+#Neg Points
 points = [(18.5916, 78.6027), (18.7564, 78.5919), (18.9212, 78.5766), (19.0379, 78.5532)]
+#Wahl Points
+#points = [(14.0089, 78.5135), (14.0448, 78.4993), (14.1093, 78.4875), (14.1876, 78.4799)]
 name = 'negribeenData.nc'
 graph = graphing(points, name)
-graph.plotAllPtsNoYearRM('v')
+graph.plotAllPtsNoYear('v')
 #print(graph.xrds.dims)
 #print(graph.xrds.data_vars) #Data vars: date_dt, v, vx_error, vy, vy_error, v_error, vx, mission_img1, satellite_img1,
 #   lon, lat, x_proj, y_proj
