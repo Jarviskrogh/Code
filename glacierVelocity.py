@@ -249,7 +249,7 @@ class graphing(convertToNetCDF):
 
         #Use if needed to set bounds
         vData = vData.sel(mid_date=vData['mid_date'] >= np.datetime64('2010-01-01'))
-        vData = vData.sel(mid_date=vData['mid_date'] <= np.datetime64('2020-01-01'))
+        #vData = vData.sel(mid_date=vData['mid_date'] <= np.datetime64('2020-01-01'))
         
         point1 = vData.sel(point=0)
         point2 = vData.sel(point=1)
@@ -260,7 +260,7 @@ class graphing(convertToNetCDF):
 
         #Use if previous bounds were set
         runningMean = runningMean.sel(mid_date=runningMean['mid_date'] >= np.datetime64('2010-01-01'))
-        runningMean = runningMean.sel(mid_date=runningMean['mid_date'] <= np.datetime64('2020-01-01'))
+        #runningMean = runningMean.sel(mid_date=runningMean['mid_date'] <= np.datetime64('2020-01-01'))
 
         runningMeanOrigin = runningMean.sel(point=0)
         runningMeanOrigin = runningMeanOrigin.where(runningMeanOrigin.notnull(), drop=True)
@@ -286,15 +286,19 @@ class graphing(convertToNetCDF):
             label=f'Terminus Running Mean (window={window_size})'
         )
 
-        plt.xlabel('Time')
+        plt.xlabel('Time', fontsize=24)
         if variable == 'v':
-            plt.title('Velocity over Time')
-            plt.ylabel('Velocity (m/yr)')
+            plt.title('Velocity over Time', fontsize=24)
+            plt.ylabel('Velocity (m/yr)', fontsize=24)
         else:
             plt.title(f'{variable} over Time')
             plt.ylabel(f'{variable} (m/yr)')
+
+        plt.xticks(fontsize=18)
+        plt.yticks(fontsize=18)
+
         plt.grid(True, which='both', linestyle='--', alpha=0.5)
-        plt.legend()                       
+        plt.legend(fontsize=14)                       
         plt.show()
 
     def calculate_running_mean(self, variable='v', window_size=12):
@@ -316,12 +320,12 @@ class graphing(convertToNetCDF):
 
 
 #Neg Points
-#points = [(18.5916, 78.6027), (18.7564, 78.5919), (18.9212, 78.5766), (19.0379, 78.5532)]
+points = [(18.5916, 78.6027), (18.7564, 78.5919), (18.9212, 78.5766), (19.0379, 78.5532)]
 #Wahl Points
-points = [(14.0089, 78.5135), (14.0448, 78.4993), (14.1093, 78.4875), (14.1876, 78.4799)]
-name = 'wahlenbergbreenData.nc'
+#points = [(14.0089, 78.5135), (14.0448, 78.4993), (14.1093, 78.4875), (14.1876, 78.4799)]
+name = 'negribeenData.nc'
 graph = graphing(points, name)
-graph.plotAllPtsNoYearRM('v', 8)
+graph.plotAllPtsNoYearRM('v', 5)
 #print(graph.xrds.dims)
 #print(graph.xrds.data_vars) #Data vars: date_dt, v, vx_error, vy, vy_error, v_error, vx, mission_img1, satellite_img1,
 #   lon, lat, x_proj, y_proj
